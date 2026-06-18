@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Management System (TMS)</title>
+  <style>
+    /* Global & Typography Rules */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #0f111a;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Container Navigation Structure */
+    .app-container {
+      display: none;
+      width: 100%;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .app-container.active {
+      display: flex;
+    }
+
+    /* Text Colors & Hierarchy */
+    h1, h2, h3, h4, th, td, label, p, span, button {
+      color: #ffffff !important;
+    }
+
+    ::placeholder {
+      color: #6b7280 !important;
+      opacity: 1;
+    }
+
+    /* Header Component */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 1rem;
+      gap: 1rem;
+    }
+
+    .main-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.05em;
+    }
+
+    /* Navigation Grid - Page 1 */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin: auto 0;
+      padding: 1.5rem 0;
+    }
+
+    .nav-card {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .nav-card:hover {
+      transform: translateY(-4px);
+      border-color: #3b82f6;
+      box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.2);
+    }
+
+    .nav-card h2 {
+      font-size: 1.35rem;
+      font-weight: 600;
+    }
+
+    /* RESPONSIVE UPGRADE: Robust CSS Grid Layout for Form Rows */
+    .input-row {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(0, 1fr);
+      gap: 0.75rem;
+      align-items: flex-end;
+      background: #1e293b;
+      padding: 1.25rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      width: 100%;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      min-width: 0; 
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .form-control {
+      background-color: #0f172a;
+      border: 1px solid #475569;
+      border-radius: 6px;
+      padding: 0.65rem 0.75rem;
+      font-size: 0.95rem;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: #3b82f6;
+    }
+
+    select.form-control {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1rem;
+      padding-right: 2rem;
+    }
+
+    /* Massive Timer Control Cluster */
+    .timer-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 1rem 0 2rem 0;
+      background: #111827;
+      border: 1px solid #1e293b;
+      padding: 2rem;
+      border-radius: 12px;
+    }
+
+    .timer-display {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 5.5rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+    }
+
+    /* Universal Buttons */
+    .btn {
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary { background-color: #2563eb; }
+    .btn-primary:hover { background-color: #1d4ed8; }
+    
+    .btn-success { background-color: #16a34a; }
+    .btn-success:hover { background-color: #15803d; }
+
+    .btn-danger { background-color: #dc2626; }
+    .btn-danger:hover { background-color: #b91c1c; }
+
+    .btn-secondary { background-color: #475569; }
+    .btn-secondary:hover { background-color: #334155; }
+
+    /* Table & Logging Architecture */
+    .table-container {
+      flex: 1;
+      background: #1e293b;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #334155;
+      margin-top: auto;
+    }
+
+    .table-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: #0f172a;
+      border-bottom: 1px solid #334155;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      overflow-y: auto;
+      max-height: 250px;
+      width: 100%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      min-width: 900px;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: #0f172a;
+      padding: 0.85rem 1rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border-bottom: 2px solid #334155;
+      z-index: 10;
+    }
+
+    td {
+      padding: 0.85rem 1rem;
+      font-size: 0.9rem;
+      border-bottom: 1px solid #334155;
+      background: #1e293b;
+    }
+
+    tr:hover td {
+      background: #24334d;
+    }
+
+    /* Prank Screen Explicit Styling */
+    .prank-layout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 60vh;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .prank-text {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      font-weight: 500;
+    }
+
+    /* MEDIA QUERIES */
+    @media (max-width: 1100px) {
+      .input-row {
+        grid-auto-flow: row;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-title { font-size: 1.4rem; }
+      .dashboard-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .nav-card { padding: 2rem 1rem; }
+      .timer-display { font-size: 3.5rem; letter-spacing: 1px; }
+      .btn { padding: 0.65rem 1.25rem; font-size: 0.9rem; }
+      .table-controls { flex-direction: column; align-items: flex-start; }
+      .table-controls .btn-group { width: 100%; justify-content: space-between; }
+      .prank-text { font-size: 1.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      .input-row { grid-template-columns: 1fr; padding: 1rem; }
+      .timer-display { font-size: 2.8rem; }
+      header { flex-direction: column; align-items: flex-start; }
+      header .btn { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="page-home" class="app-container active">
+    <header style="justify-content: center; border-bottom: none;">
+      <h1 class="main-title">Time Management System (TMS)</h1>
+    </header>
+    <div class="dashboard-grid">
+      <div class="nav-card" onclick="navigateTo('page-classification')">
+        <h2>Document Classification</h2>
+      </div>
+      <div class="nav-card" onclick="navigateTo('page-field-id')">
+        <h2>Field Identification</h2>
+      </div>
+      <div class="nav-card" onclick="navigateTo('page-transcription')">
+        <h2>Transcription</h2>
+      </div>
+      <div class="nav-card" onclick="navigateTo('page-supervision')">
+        <h2>Custom Supervision</h2>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-classification" class="app-container">
+    <header>
+      <h1 class="main-title">Document Classification</h1>
+      <button class="btn btn-secondary" onclick="navigateTo('page-home')">Back to Home</button>
+    </header>
+
+    <div class="input-row">
+      <div class="form-group">
+        <label>Emp ID</label>
+        <input type="text" id="class-emp-id" class="form-control" placeholder="0018">
+      </div>
+      <div class="form-group">
+        <label>Emp Name</label>
+        <input type="text" id="class-emp-name" class="form-control" placeholder="Virat Kholi">
+      </div>
+      <div class="form-group">
+        <label>Doc Classification</label>
+        <input type="text" id="class-module" class="form-control" value="Document Classification" readonly>
+      </div>
+      <div class="form-group">
+        <label>Doc ID</label>
+        <input type="text" id="class-doc-id" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>No of Pages</label>
+        <input type="number" id="class-pages" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select id="class-type" class="form-control">
+          <option value="Classification">Classification</option>
+          <option value="Regroup">Regroup</option>
+          <option value="Both Classification and Regroup">Both Classification and Regroup</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Notes/Challenges</label>
+        <input type="text" id="class-notes" class="form-control" placeholder="e.g., Blurry pages, Doubts">
+      </div>
+    </div>
+
+    <div class="timer-section">
+      <div class="timer-display" id="class-timer">00:00:000</div>
+      <div class="btn-group">
+        <button class="btn btn-success" id="class-start-btn" onclick="toggleTimer('class')">Start</button>
+        <button class="btn btn-danger" onclick="endTimer('class')">End</button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <div class="table-controls">
+        <h3>Logged Entries History</h3>
+        <div class="btn-group">
+          <button class="btn btn-primary" id="class-copy-btn" onclick="copyTableToClipboard('class-table', this)">Copy for Excel</button>
+          <button class="btn btn-danger" onclick="resetTableData('class-table')">Reset Data</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table id="class-table">
+          <thead>
+            <tr>
+              <th>Emp ID</th>
+              <th>Emp Name</th>
+              <th>Module Name</th>
+              <th>Doc ID</th>
+              <th>No of Pages</th>
+              <th>Type</th>
+              <th>Notes/Challenges</th>
+              <th>Elapsed Time</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-field-id" class="app-container">
+    <header>
+      <h1 class="main-title">Field Identification</h1>
+      <button class="btn btn-secondary" onclick="navigateTo('page-home')">Back to Home</button>
+    </header>
+
+    <div class="input-row">
+      <div class="form-group">
+        <label>Emp ID</label>
+        <input type="text" id="field-emp-id" class="form-control" placeholder="0007">
+      </div>
+      <div class="form-group">
+        <label>Emp Name</label>
+        <input type="text" id="field-emp-name" class="form-control" placeholder="MS Dhoni">
+      </div>
+      <div class="form-group">
+        <label>Module Name</label>
+        <input type="text" id="field-module" class="form-control" value="Field Identification" readonly>
+      </div>
+      <div class="form-group">
+        <label>Doc ID</label>
+        <input type="text" id="field-doc-id" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>No of Fields Identified</label>
+        <input type="number" id="field-fields-count" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Notes/Challenges</label>
+        <input type="text" id="field-notes" class="form-control">
+      </div>
+    </div>
+
+    <div class="timer-section">
+      <div class="timer-display" id="field-timer">00:00:000</div>
+      <div class="btn-group">
+        <button class="btn btn-success" id="field-start-btn" onclick="toggleTimer('field')">Start</button>
+        <button class="btn btn-danger" onclick="endTimer('field')">End</button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <div class="table-controls">
+        <h3>Logged Entries History</h3>
+        <div class="btn-group">
+          <button class="btn btn-primary" id="field-copy-btn" onclick="copyTableToClipboard('field-table', this)">Copy for Excel</button>
+          <button class="btn btn-danger" onclick="resetTableData('field-table')">Reset Data</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table id="field-table">
+          <thead>
+            <tr>
+              <th>Emp ID</th>
+              <th>Emp Name</th>
+              <th>Module Name</th>
+              <th>Doc ID</th>
+              <th>No of Fields Identified</th>
+              <th>Notes/Challenges</th>
+              <th>Elapsed Time</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-transcription" class="app-container">
+    <header>
+      <h1 class="main-title">Transcription Studio</h1>
+      <button class="btn btn-secondary" onclick="stopPrankLoop(); navigateTo('page-home');">Back to Home</button>
+    </header>
+    <div class="prank-layout">
+      <div class="prank-text" id="prank-timer-display">Your page will be ready in 01:00 seconds...</div>
+    </div>
+  </div>
+
+  <div id="page-supervision" class="app-container">
+    <header>
+      <h1 class="main-title">Custom Supervision</h1>
+      <button class="btn btn-secondary" onclick="navigateTo('page-home')">Back to Home</button>
+    </header>
+
+    <div class="input-row">
+      <div class="form-group">
+        <label>Emp ID</label>
+        <input type="text" id="super-emp-id" class="form-control" placeholder="0045">
+      </div>
+      <div class="form-group">
+        <label>Emp Name</label>
+        <input type="text" id="super-emp-name" class="form-control" placeholder="Rohit Sharma">
+      </div>
+      <div class="form-group">
+        <label>Module Name</label>
+        <input type="text" id="super-module" class="form-control" value="Custom Supervision" readonly>
+      </div>
+      <div class="form-group">
+        <label>Doc ID</label>
+        <input type="text" id="super-doc-id" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select id="super-type" class="form-control">
+          <option value="Data Validation" selected>Data Validation</option>
+          <option value="Case Assignment">Case Assignment</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Notes/Challenges</label>
+        <input type="text" id="super-notes" class="form-control">
+      </div>
+    </div>
+
+    <div class="timer-section">
+      <div class="timer-display" id="super-timer">00:00:000</div>
+      <div class="btn-group">
+        <button class="btn btn-success" id="super-start-btn" onclick="toggleTimer('super')">Start</button>
+        <button class="btn btn-danger" onclick="endTimer('super')">End</button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <div class="table-controls">
+        <h3>Logged Entries History</h3>
+        <div class="btn-group">
+          <button class="btn btn-primary" id="super-copy-btn" onclick="copyTableToClipboard('super-table', this)">Copy for Excel</button>
+          <button class="btn btn-danger" onclick="resetTableData('super-table')">Reset Data</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table id="super-table">
+          <thead>
+            <tr>
+              <th>Emp ID</th>
+              <th>Emp Name</th>
+              <th>Module Name</th>
+              <th>Doc ID</th>
+              <th>Type</th>
+              <th>Notes/Challenges</th>
+              <th>Elapsed Time</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // CRITICAL SETTING: SCRIPT ENDPOINT CONFIGURATION
+    // ==========================================
+    // LINE 382: Paste your Web App Deployment link right here inside the quotes!
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzX_FUaqeGHm8_3kPinqZyrcpwxpIXvGEEUa80_W8ExnJASU9chNI4iJZG-3ldjECzy/exec";
+
+    // State Tracking Databases
+    const activeTimers = {
+      class: { running: false, elapsed: 0, intervalId: null, startTime: null },
+      field: { running: false, elapsed: 0, intervalId: null, startTime: null },
+      super: { running: false, elapsed: 0, intervalId: null, startTime: null }
+    };
+
+    let prankIntervalId = null;
+    let prankTimeLeft = 60000; 
+
+    // Global SPA Navigation Engine
+    function navigateTo(pageId) {
+      document.querySelectorAll('.app-container').forEach(page => {
+        page.classList.remove('active');
+      });
+      document.getElementById(pageId).classList.add('active');
+
+      if (pageId === 'page-transcription') {
+        startPrankLoop();
+      }
+    }
+
+    // High Precision Dynamic Formatting Display Engine
+    function formatTime(totalMs) {
+      const minutes = Math.floor(totalMs / 60000);
+      const seconds = Math.floor((totalMs % 60000) / 1000);
+      const ms = Math.floor(totalMs % 1000);
+
+      const paddedMin = String(minutes).padStart(2, '0');
+      const paddedSec = String(seconds).padStart(2, '0');
+      const paddedMs = String(ms).padStart(3, '0');
+
+      return `${paddedMin}:${paddedSec}:${paddedMs}`;
+    }
+
+    // High Frequency Timer Thread Management
+    function toggleTimer(prefix) {
+      const timerState = activeTimers[prefix];
+      const startBtn = document.getElementById(`${prefix}-start-btn`);
+      const display = document.getElementById(`${prefix}-timer`);
+
+      if (!timerState.running) {
+        timerState.running = true;
+        startBtn.textContent = 'Pause';
+        startBtn.className = 'btn btn-secondary';
+        
+        timerState.startTime = Date.now() - timerState.elapsed;
+        
+        timerState.intervalId = setInterval(() => {
+          timerState.elapsed = Date.now() - timerState.startTime;
+          display.textContent = formatTime(timerState.elapsed);
+        }, 33); 
+      } else {
+        timerState.running = false;
+        startBtn.textContent = 'Start';
+        startBtn.className = 'btn btn-success';
+        clearInterval(timerState.intervalId);
+      }
+    }
+
+    // UPDATED: Triggers live spreadsheet delivery right before clearing screen inputs
+    function endTimer(prefix) {
+      const timerState = activeTimers[prefix];
+      
+      if (timerState.running) {
+        timerState.elapsed = Date.now() - timerState.startTime;
+        clearInterval(timerState.intervalId);
+      }
+
+      const exactDurationStr = formatTime(timerState.elapsed);
+      
+      // Send data to Google Sheets & log to the local table display
+      sendDataToGoogleSheets(prefix, exactDurationStr);
+      logDataRow(prefix, exactDurationStr);
+
+      timerState.running = false;
+      timerState.elapsed = 0;
+      document.getElementById(`${prefix}-timer`).textContent = "00:00:000";
+      
+      const startBtn = document.getElementById(`${prefix}-start-btn`);
+      startBtn.textContent = 'Start';
+      startBtn.className = 'btn btn-success';
+
+      clearSpecificInputs(prefix);
+    }
+
+    // NEW FUNCTION: Packages inputs up and routes them securely to Google Script Web App
+    function sendDataToGoogleSheets(prefix, durationString) {
+      let payload = {
+        prefix: prefix,
+        elapsedTime: durationString
+      };
+
+      if (prefix === 'class') {
+        payload.empId = document.getElementById('class-emp-id').value || document.getElementById('class-emp-id').placeholder;
+        payload.empName = document.getElementById('class-emp-name').value || document.getElementById('class-emp-name').placeholder;
+        payload.moduleName = document.getElementById('class-module').value;
+        payload.docId = document.getElementById('class-doc-id').value;
+        payload.metricCount = document.getElementById('class-pages').value;
+        payload.type = document.getElementById('class-type').value;
+        payload.notes = document.getElementById('class-notes').value;
+      } else if (prefix === 'field') {
+        payload.empId = document.getElementById('field-emp-id').value || document.getElementById('field-emp-id').placeholder;
+        payload.empName = document.getElementById('field-emp-name').value || document.getElementById('field-emp-name').placeholder;
+        payload.moduleName = document.getElementById('field-module').value;
+        payload.docId = document.getElementById('field-doc-id').value;
+        payload.metricCount = document.getElementById('field-fields-count').value;
+        payload.type = "N/A";
+        payload.notes = document.getElementById('field-notes').value;
+      } else if (prefix === 'super') {
+        payload.empId = document.getElementById('super-emp-id').value || document.getElementById('super-emp-id').placeholder;
+        payload.empName = document.getElementById('super-emp-name').value || document.getElementById('super-emp-name').placeholder;
+        payload.moduleName = document.getElementById('super-module').value;
+        payload.docId = document.getElementById('super-doc-id').value;
+        payload.metricCount = "N/A";
+        payload.type = document.getElementById('super-type').value;
+        payload.notes = document.getElementById('super-notes').value;
+      }
+
+      // Check if URL is configured before fetching
+      if(GOOGLE_SCRIPT_URL.includes("PASTE_YOUR_COPIED_WEB_APP_URL_HERE")) {
+        console.warn("Spreadsheet submission skipped: Web App URL is not configured.");
+        return;
+      }
+
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(() => {
+        console.log(`Successfully dispatched live tracking metrics for ${prefix}`);
+      })
+      .catch(error => {
+        console.error("Data upload execution failed: ", error);
+      });
+    }
+
+    // Data Routing and Retention Pipeline
+    function logDataRow(prefix, durationString) {
+      const tbody = document.querySelector(`#${prefix}-table tbody`);
+      const row = document.createElement('tr');
+      let values = [];
+
+      if (prefix === 'class') {
+        values = [
+          document.getElementById('class-emp-id').value || document.getElementById('class-emp-id').placeholder,
+          document.getElementById('class-emp-name').value || document.getElementById('class-emp-name').placeholder,
+          document.getElementById('class-module').value,
+          document.getElementById('class-doc-id').value,
+          document.getElementById('class-pages').value,
+          document.getElementById('class-type').value,
+          document.getElementById('class-notes').value,
+          durationString
+        ];
+      } else if (prefix === 'field') {
+        values = [
+          document.getElementById('field-emp-id').value || document.getElementById('field-emp-id').placeholder,
+          document.getElementById('field-emp-name').value || document.getElementById('field-emp-name').placeholder,
+          document.getElementById('field-module').value,
+          document.getElementById('field-doc-id').value,
+          document.getElementById('field-fields-count').value,
+          document.getElementById('field-notes').value,
+          durationString
+        ];
+      } else if (prefix === 'super') {
+        values = [
+          document.getElementById('super-emp-id').value || document.getElementById('super-emp-id').placeholder,
+          document.getElementById('super-emp-name').value || document.getElementById('super-emp-name').placeholder,
+          document.getElementById('super-module').value,
+          document.getElementById('super-doc-id').value,
+          document.getElementById('super-type').value,
+          document.getElementById('super-notes').value,
+          durationString
+        ];
+      }
+
+      values.forEach(val => {
+        const td = document.createElement('td');
+        td.textContent = val;
+        row.appendChild(td);
+      });
+
+      tbody.appendChild(row);
+    }
+
+    function clearSpecificInputs(prefix) {
+      if (prefix === 'class') {
+        document.getElementById('class-doc-id').value = '';
+        document.getElementById('class-pages').value = '';
+        document.getElementById('class-type').selectedIndex = 0;
+        document.getElementById('class-notes').value = '';
+      } else if (prefix === 'field') {
+        document.getElementById('field-doc-id').value = '';
+        document.getElementById('field-fields-count').value = '';
+        document.getElementById('field-notes').value = '';
+      } else if (prefix === 'super') {
+        document.getElementById('super-doc-id').value = '';
+        document.getElementById('super-type').selectedIndex = 0;
+        document.getElementById('super-notes').value = '';
+      }
+    }
+
+    function resetTableData(tableId) {
+      if (confirm("Are you absolutely certain you want to wipe the current table tracking history data?")) {
+        document.querySelector(`#${tableId} tbody`).innerHTML = '';
+      }
+    }
+
+    // Excel Export Clipboard Logic
+    function copyTableToClipboard(tableId, elementButton) {
+      const table = document.getElementById(tableId);
+      let tsvLines = [];
+
+      const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
+      tsvLines.push(headers.join('\t'));
+
+      const rows = table.querySelectorAll('tbody tr');
+      rows.forEach(row => {
+        const cells = Array.from(row.querySelectorAll('td')).map(td => td.textContent.trim());
+        tsvLines.push(cells.join('\t'));
+      });
+
+      const fullTsvTextData = tsvLines.join('\n');
+
+      navigator.clipboard.writeText(fullTsvTextData).then(() => {
+        const legacyText = elementButton.textContent;
+        elementButton.textContent = "Copied!";
+        elementButton.style.backgroundColor = "#16a34a";
+
+        setTimeout(() => {
+          elementButton.textContent = legacyText;
+          elementButton.style.backgroundColor = ""; 
+        }, 1500);
+      }).catch(err => {
+        console.error("Critical Failure running System Clipboard access: ", err);
+      });
+    }
+
+    // Prank Module Execution Engine
+    function startPrankLoop() {
+      stopPrankLoop(); 
+      prankTimeLeft = 60000;
+      const display = document.getElementById('prank-timer-display');
+
+      prankIntervalId = setInterval(() => {
+        prankTimeLeft -= 1000;
+        if (prankTimeLeft <= 0) {
+          prankTimeLeft = 60000; 
+        }
+        
+        const secondsTotal = Math.floor(prankTimeLeft / 1000);
+        const displayMin = String(Math.floor(secondsTotal / 60)).padStart(2, '0');
+        const displaySec = String(secondsTotal % 60).padStart(2, '0');
+        
+        display.textContent = `Your page will be ready in ${displayMin}:${displaySec} seconds...`;
+      }, 1000);
+    }
+
+    function stopPrankLoop() {
+      if (prankIntervalId) {
+        clearInterval(prankIntervalId);
+        prankIntervalId = null;
+      }
+      document.getElementById('prank-timer-display').textContent = "Your page will be ready in 01:00 seconds...";
+    }
+  </script>
+</body>
+</html>
