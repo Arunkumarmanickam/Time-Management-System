@@ -686,11 +686,29 @@
         payload.notes = document.getElementById('super-notes').value;
       }
 
-      // Check if URL is configured before fetching
-      if(GOOGLE_SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbzPNse-qjSAcnEVpFyjpZBBX6pX0nxpBsGUrldKXXJIT0cGiEl9wcGHx7genwopHnJX/exec")) {
-        console.warn("Spreadsheet submission skipped: Web App URL is not configured.");
-        return;
-      }
+      // 1. CLICK TRIGGER CHECKPOINT (Add this line to see it fire instantly!)
+      console.log("🚀 End button clicked! Sending data payload:", payload);
+
+      // 2. Direct fetch call with text transport to prevent CORS blockages
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.result === "success") {
+          console.log("🎉 Data saved to Google Sheet successfully!");
+        } else {
+          console.error("❌ Google Sheet Error:", data.error);
+        }
+      })
+      .catch(error => {
+        console.error("❌ Network Connection Error: ", error);
+      });
+    }
 
 // Send data to Google Apps Script via clean text transport
   fetch(GOOGLE_SCRIPT_URL, {
