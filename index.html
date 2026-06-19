@@ -686,10 +686,6 @@
         payload.notes = document.getElementById('super-notes').value;
       }
 
-      // Check if URL is configured before fetching
-      if(GOOGLE_SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbx9MqScrtqY3DAzS9ONHuiDdtf9uqC2Eut2k99D8OCYuNd-FfqdtAkvdZf1c8WnNLn8/exec")) {
-        console.warn("Spreadsheet submission skipped: Web App URL is not configured.");
-        return;
       }
 
 // Send data to Google Apps Script via clean text transport
