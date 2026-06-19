@@ -43,8 +43,8 @@
     }
 
     ::placeholder {
-      color: #6b7280 !important;
-      opacity: 1;
+      color: #64748b !important;
+      opacity: 0.8;
     }
 
     /* Header Component */
@@ -62,6 +62,9 @@
       font-size: 1.75rem;
       font-weight: 700;
       letter-spacing: -0.05em;
+      background: linear-gradient(to right, #ffffff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     /* Navigation Grid - Page 1 */
@@ -98,7 +101,7 @@
       font-weight: 600;
     }
 
-    /* RESPONSIVE UPGRADE: Robust CSS Grid Layout for Form Rows */
+    /* Robust CSS Grid Layout for Form Rows */
     .input-row {
       display: grid;
       grid-auto-flow: column;
@@ -110,6 +113,7 @@
       border-radius: 10px;
       margin-bottom: 2rem;
       width: 100%;
+      border: 1px solid #334155;
     }
 
     .form-group {
@@ -124,11 +128,13 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      color: #94a3b8 !important;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
+    /* CRITICAL FIX: Explicit visibility styling for inputs and selects */
     .form-control {
       background-color: #0f172a;
       border: 1px solid #475569;
@@ -137,11 +143,38 @@
       font-size: 0.95rem;
       width: 100%;
       outline: none;
-      transition: border-color 0.2s;
+      color: #ffffff !important; /* Forces entered text to be bright white */
+      transition: all 0.2s ease;
     }
 
     .form-control:focus {
       border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+
+    /* CRITICAL FIX: Clear visibility for pre-entered / read-only fields */
+    .form-control[readonly] {
+      background-color: #111827;
+      border-color: #334155;
+      color: #e2e8f0 !important; /* Visible crisp silver-white text */
+      cursor: not-allowed;
+      opacity: 0.9;
+    }
+
+    /* CRITICAL FIX: Forces dropdown choice options to be clearly readable */
+    select.form-control option {
+      background-color: #0f172a;
+      color: #ffffff !important;
+    }
+
+    /* Hide numeric input arrows across browsers */
+    .form-control::-webkit-outer-spin-button,
+    .form-control::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .form-control[type=number] {
+      -moz-appearance: textfield;
     }
 
     select.form-control {
@@ -172,7 +205,7 @@
       font-weight: 700;
       letter-spacing: 2px;
       margin-bottom: 1.5rem;
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      text-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
     }
 
     .btn-group {
@@ -188,25 +221,23 @@
       border-radius: 6px;
       cursor: pointer;
       border: none;
-      transition: background-color 0.2s, transform 0.1s;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       white-space: nowrap;
     }
 
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.1);
+    }
+
     .btn:active {
-      transform: scale(0.98);
+      transform: scale(0.97);
     }
 
     .btn-primary { background-color: #2563eb; }
-    .btn-primary:hover { background-color: #1d4ed8; }
-    
     .btn-success { background-color: #16a34a; }
-    .btn-success:hover { background-color: #15803d; }
-
     .btn-danger { background-color: #dc2626; }
-    .btn-danger:hover { background-color: #b91c1c; }
-
     .btn-secondary { background-color: #475569; }
-    .btn-secondary:hover { background-color: #334155; }
 
     /* Table & Logging Architecture */
     .table-container {
@@ -254,6 +285,7 @@
       font-size: 0.9rem;
       border-bottom: 2px solid #334155;
       z-index: 10;
+      color: #94a3b8 !important;
     }
 
     td {
@@ -316,7 +348,7 @@
 
   <div id="page-home" class="app-container active">
     <header style="justify-content: center; border-bottom: none;">
-      <h1 class="main-title">Time Management System (TMS)</h1>
+      <h1 class="main-title" style="-webkit-text-fill-color: initial; background: none; color: #ffffff !important;">Time Management System (TMS)</h1>
     </header>
     <div class="dashboard-grid">
       <div class="nav-card" onclick="navigateTo('page-classification')">
@@ -561,13 +593,8 @@
   </div>
 
   <script>
-    // ==========================================
-    // CRITICAL SETTING: SCRIPT ENDPOINT CONFIGURATION
-    // ==========================================
-    // LINE 382: Paste your Web App Deployment link right here inside the quotes!
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9MqScrtqY3DAzS9ONHuiDdtf9uqC2Eut2k99D8OCYuNd-FfqdtAkvdZf1c8WnNLn8/exec";
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycb9MqScrtqY3DAzS9ONHuiDdtf9uqC2Eut2k99D8OCYuNd-FfqdtAkvdZf1c8WnNLn8/exec";
 
-    // State Tracking Databases
     const activeTimers = {
       class: { running: false, elapsed: 0, intervalId: null, startTime: null },
       field: { running: false, elapsed: 0, intervalId: null, startTime: null },
@@ -577,7 +604,6 @@
     let prankIntervalId = null;
     let prankTimeLeft = 60000; 
 
-    // Global SPA Navigation Engine
     function navigateTo(pageId) {
       document.querySelectorAll('.app-container').forEach(page => {
         page.classList.remove('active');
@@ -589,7 +615,6 @@
       }
     }
 
-    // High Precision Dynamic Formatting Display Engine
     function formatTime(totalMs) {
       const minutes = Math.floor(totalMs / 60000);
       const seconds = Math.floor((totalMs % 60000) / 1000);
@@ -602,7 +627,6 @@
       return `${paddedMin}:${paddedSec}:${paddedMs}`;
     }
 
-    // High Frequency Timer Thread Management
     function toggleTimer(prefix) {
       const timerState = activeTimers[prefix];
       const startBtn = document.getElementById(`${prefix}-start-btn`);
@@ -627,7 +651,6 @@
       }
     }
 
-    // UPDATED: Triggers live spreadsheet delivery right before clearing screen inputs
     function endTimer(prefix) {
       const timerState = activeTimers[prefix];
       
@@ -638,7 +661,6 @@
 
       const exactDurationStr = formatTime(timerState.elapsed);
       
-      // Send data to Google Sheets & log to the local table display
       sendDataToGoogleSheets(prefix, exactDurationStr);
       logDataRow(prefix, exactDurationStr);
 
@@ -653,7 +675,6 @@
       clearSpecificInputs(prefix);
     }
 
-    // NEW FUNCTION: Packages inputs up and routes them securely to Google Script Web App
     function sendDataToGoogleSheets(prefix, durationString) {
       let payload = {
         prefix: prefix,
@@ -686,29 +707,26 @@
         payload.notes = document.getElementById('super-notes').value;
       }
 
-    
-
-// Send data to Google Apps Script via clean text transport
-  fetch(GOOGLE_SCRIPT_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "text/plain;charset=utf-8"
-    },
-    body: JSON.stringify(payload)
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.result === "success") {
-      console.log("🎉 Data saved to Google Sheet successfully!");
-    } else {
-      console.error("❌ Google Sheet Error:", data.error);
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.result === "success") {
+          console.log("🎉 Data saved to Google Sheet successfully!");
+        } else {
+          console.error("❌ Google Sheet Error:", data.error);
+        }
+      })
+      .catch(error => {
+        console.error("❌ Network Connection Error: ", error);
+      });
     }
-  })
-  .catch(error => {
-    console.error("❌ Network Connection Error: ", error);
-  });    }
 
-    // Data Routing and Retention Pipeline
     function logDataRow(prefix, durationString) {
       const tbody = document.querySelector(`#${prefix}-table tbody`);
       const row = document.createElement('tr');
@@ -779,7 +797,6 @@
       }
     }
 
-    // Excel Export Clipboard Logic
     function copyTableToClipboard(tableId, elementButton) {
       const table = document.getElementById(tableId);
       let tsvLines = [];
@@ -809,7 +826,6 @@
       });
     }
 
-    // Prank Module Execution Engine
     function startPrankLoop() {
       stopPrankLoop(); 
       prankTimeLeft = 60000;
