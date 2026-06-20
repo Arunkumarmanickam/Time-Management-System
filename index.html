@@ -126,12 +126,13 @@
       letter-spacing: -0.05em;
     }
 
-    /* Branding Elements */
+    /* Branding Elements - Lifted up to reduce unwanted top gap */
     .logo-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-bottom: 1rem;
+      margin-top: -0.5rem; 
+      margin-bottom: 0.5rem;
     }
 
     .app-logo {
@@ -198,7 +199,7 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 1.5rem;
       margin-bottom: auto;
-      padding: 1.5rem 0;
+      padding: 1rem 0;
     }
 
     .nav-card {
@@ -401,7 +402,7 @@
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      min-width: 900px;
+      min-width: 950px;
     }
 
     th {
@@ -433,7 +434,7 @@
     @media (max-width: 1200px) {
       .input-row {
         grid-auto-flow: row;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 1rem;
       }
     }
@@ -465,7 +466,7 @@
   <div id="page-home" class="app-container active">
     
     <!-- CONTEXT BUTTON SWAPPER WRAPPER LAYER -->
-    <div style="display: flex; width: 100%; justify-content: flex-end; margin-top: 0.5rem; padding-right: 0.5rem;">
+    <div style="display: flex; width: 100%; justify-content: flex-end; margin-top: 0.25rem; padding-right: 0.5rem;">
       <button class="theme-action-btn" id="global-theme-trigger" onclick="triggerVirusThemeAnimation(event)" title="Switch Themes Mode">
         <span class="theme-icon-display" id="global-theme-icon">☀️</span>
       </button>
@@ -476,14 +477,14 @@
       <img class="app-logo" src="https://img.icons8.com/fluency/96/time-machine.png" alt="TMS Logo">
     </div>
 
-    <header style="justify-content: center; border-bottom: none; margin-bottom: 1rem;">
+    <header style="justify-content: center; border-bottom: none; margin-bottom: 0.75rem;">
       <h1 class="main-title">Time Management System (TMS)</h1>
     </header>
 
     <div id="user-profile-box" class="profile-section">
-      <h3 style="font-size: 0.9rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Current Tracker User <span style="color: #dc2626;">*Must</span></h3>
+      <h3 style="font-size: 0.9rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Current Tracker User <span style="color: #dc2626;">*</span></h3>
       <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-        <input type="text" id="global-user-name" class="form-control" placeholder="Enter your name to unlock (e.g., Dhanush, Deekshant)" style="max-width: 420px;">
+        <input type="text" id="global-user-name" class="form-control" placeholder="Enter your name" style="max-width: 420px;">
         <span id="validation-msg" style="font-size: 0.85rem; color: var(--text-muted);">*Required to log tracking entries under your separate sheet tab.</span>
       </div>
     </div>
@@ -514,11 +515,11 @@
     <div class="input-row">
       <div class="form-group">
         <label>Emp ID</label>
-        <input type="text" id="class-emp-id" class="form-control" placeholder="0018">
+        <input type="text" id="class-emp-id" class="form-control" placeholder="">
       </div>
       <div class="form-group">
         <label>Emp Name</label>
-        <input type="text" id="class-emp-name" class="form-control" placeholder="Virat Kholi">
+        <input type="text" id="class-emp-name" class="form-control" placeholder="">
       </div>
       <div class="form-group">
         <label>Doc Classification</label>
@@ -592,11 +593,11 @@
     <div class="input-row">
       <div class="form-group">
         <label>Emp ID</label>
-        <input type="text" id="field-emp-id" class="form-control" placeholder="0007">
+        <input type="text" id="field-emp-id" class="form-control" placeholder="">
       </div>
       <div class="form-group">
         <label>Emp Name</label>
-        <input type="text" id="field-emp-name" class="form-control" placeholder="MS Dhoni">
+        <input type="text" id="field-emp-name" class="form-control" placeholder="">
       </div>
       <div class="form-group">
         <label>Module Name</label>
@@ -631,6 +632,13 @@
         </select>
       </div>
       <div class="form-group">
+        <label>Kicked Back</label>
+        <select id="field-kicked-back" class="form-control">
+          <option value="No" selected>No</option>
+          <option value="Yes">Yes</option>
+        </select>
+      </div>
+      <div class="form-group">
         <label>Notes/Challenges</label>
         <input type="text" id="field-notes" class="form-control">
       </div>
@@ -662,6 +670,7 @@
               <th>Doc ID</th>
               <th>Fields Identified</th>
               <th>Layout Type</th>
+              <th>Kicked Back</th>
               <th>Notes/Challenges</th>
               <th>Elapsed Time</th>
             </tr>
@@ -721,6 +730,13 @@
         </select>
       </div>
       <div class="form-group">
+        <label>Kicked Back</label>
+        <select id="trans-kicked-back" class="form-control">
+          <option value="No" selected>No</option>
+          <option value="Yes">Yes</option>
+        </select>
+      </div>
+      <div class="form-group">
         <label>Notes/Challenges</label>
         <input type="text" id="trans-notes" class="form-control">
       </div>
@@ -752,6 +768,7 @@
               <th>Doc ID</th>
               <th>Fields Transcribed</th>
               <th>Layout Type</th>
+              <th>Kicked Back</th>
               <th>Notes/Challenges</th>
               <th>Elapsed Time</th>
             </tr>
@@ -772,11 +789,11 @@
     <div class="input-row">
       <div class="form-group">
         <label>Emp ID</label>
-        <input type="text" id="super-emp-id" class="form-control" placeholder="0045">
+        <input type="text" id="super-emp-id" class="form-control" placeholder="">
       </div>
       <div class="form-group">
         <label>Emp Name</label>
-        <input type="text" id="super-emp-name" class="form-control" placeholder="Rohit Sharma">
+        <input type="text" id="super-emp-name" class="form-control" placeholder="">
       </div>
       <div class="form-group">
         <label>Module Name</label>
@@ -835,7 +852,7 @@
   </div>
 
   <script>
-    // Paste your unique deployment URL here inside the quotes
+    // HARDCODED ACTIVE GOOGLE APPS SCRIPT WEB APP TARGET URL
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbydQj6XoC2nf6Sqiq0XDFINCzoX1xWH-Xw06TXF_wXTqz-tx8yDjOL9HmMOmVOeR1e-/exec";
 
     const activeTimers = {
@@ -1028,6 +1045,7 @@
         payload.docId = document.getElementById('field-doc-id').value;
         payload.metricCount = document.getElementById('field-fields-count').value;
         payload.type = document.getElementById('field-layouts').value; 
+        payload.kickedBack = document.getElementById('field-kicked-back').value;
         payload.notes = document.getElementById('field-notes').value;
       } else if (prefix === 'trans') {
         payload.empId = document.getElementById('trans-emp-id').value || document.getElementById('trans-emp-id').placeholder;
@@ -1036,6 +1054,7 @@
         payload.docId = document.getElementById('trans-doc-id').value;
         payload.metricCount = document.getElementById('trans-fields-count').value;
         payload.type = document.getElementById('trans-layouts').value; 
+        payload.kickedBack = document.getElementById('trans-kicked-back').value;
         payload.notes = document.getElementById('trans-notes').value;
       } else if (prefix === 'super') {
         payload.empId = document.getElementById('super-emp-id').value || document.getElementById('super-emp-id').placeholder;
@@ -1091,6 +1110,7 @@
           document.getElementById('field-doc-id').value,
           document.getElementById('field-fields-count').value,
           document.getElementById('field-layouts').value,
+          document.getElementById('field-kicked-back').value,
           document.getElementById('field-notes').value,
           durationString
         ];
@@ -1102,6 +1122,7 @@
           document.getElementById('trans-doc-id').value,
           document.getElementById('trans-fields-count').value,
           document.getElementById('trans-layouts').value,
+          document.getElementById('trans-kicked-back').value,
           document.getElementById('trans-notes').value,
           durationString
         ];
@@ -1136,11 +1157,13 @@
         document.getElementById('field-doc-id').value = '';
         document.getElementById('field-fields-count').value = '';
         document.getElementById('field-layouts').selectedIndex = 14; 
+        document.getElementById('field-kicked-back').selectedIndex = 0; // Default back to 'No'
         document.getElementById('field-notes').value = '';
       } else if (prefix === 'trans') {
         document.getElementById('trans-doc-id').value = '';
         document.getElementById('trans-fields-count').value = '';
         document.getElementById('trans-layouts').selectedIndex = 14; 
+        document.getElementById('trans-kicked-back').selectedIndex = 0; // Default back to 'No'
         document.getElementById('trans-notes').value = '';
       } else if (prefix === 'super') {
         document.getElementById('super-doc-id').value = '';
