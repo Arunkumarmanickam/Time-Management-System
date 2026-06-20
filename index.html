@@ -26,14 +26,14 @@
 
     /* EYE-SAFETY LIGHT MODE: Low-Contrast Matte Finish */
     [data-theme="light"] {
-      --bg-global: #cbd5e1; /* Soft matte slate gray instead of bright white */
+      --bg-global: #cbd5e1; 
       --bg-card: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-      --bg-container: #e2e8f0; /* Muted warm background surface */
+      --bg-container: #e2e8f0; 
       --bg-input: #f8fafc;
       --bg-timer: #f1f5f9;
       --border-color: #94a3b8;
       --border-input: #64748b;
-      --text-main: #0f172a; /* Deep charcoal for heavy legibility */
+      --text-main: #0f172a; 
       --text-muted: #334155;
       --text-placeholder: #64748b;
       --shadow-color: rgba(15, 23, 42, 0.12);
@@ -126,7 +126,7 @@
       letter-spacing: -0.05em;
     }
 
-    /* Branding Elements - Lifted up to reduce unwanted top gap */
+    /* Branding Elements */
     .logo-container {
       display: flex;
       justify-content: center;
@@ -482,9 +482,9 @@
     </header>
 
     <div id="user-profile-box" class="profile-section">
-      <h3 style="font-size: 0.9rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Current Tracker User <span style="color: #dc2626;">*</span></h3>
+      <h3 style="font-size: 0.9rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Current Tracker User <span style="color: #dc2626;">*Must</span></h3>
       <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-        <input type="text" id="global-user-name" class="form-control" placeholder="Enter your name" style="max-width: 420px;">
+        <input type="text" id="global-user-name" class="form-control" placeholder="Enter your name to unlock (e.g., Dhanush, Deekshant)" style="max-width: 420px;">
         <span id="validation-msg" style="font-size: 0.85rem; color: var(--text-muted);">*Required to log tracking entries under your separate sheet tab.</span>
       </div>
     </div>
@@ -691,11 +691,11 @@
     <div class="input-row">
       <div class="form-group">
         <label>Emp ID</label>
-        <input type="text" id="trans-emp-id" class="form-control" placeholder="0010">
+        <input type="text" id="trans-emp-id" class="form-control" placeholder="">
       </div>
       <div class="form-group">
         <label>Emp Name</label>
-        <input type="text" id="trans-emp-name" class="form-control" placeholder="Sachin T">
+        <input type="text" id="trans-emp-name" class="form-control" placeholder="">
       </div>
       <div class="form-group">
         <label>Module Name</label>
@@ -862,60 +862,50 @@
       super: { running: false, elapsed: 0, intervalId: null, startTime: null }
     };
 
-    // Verification engine on workspace bootup setup
     document.addEventListener("DOMContentLoaded", function() {
       const savedUser = localStorage.getItem("trackerUserName");
       if (savedUser) {
         document.getElementById("global-user-name").value = savedUser;
       }
 
-      // Initial active theme sync check up
       const savedTheme = localStorage.getItem("trackerTheme") || "dark";
       document.documentElement.setAttribute("data-theme", savedTheme);
       updateThemeIcon(savedTheme);
     });
 
-    // Dynamic Icon Switching Layout
     function updateThemeIcon(theme) {
       const iconDisplay = document.getElementById("global-theme-icon");
       if (theme === "dark") {
-        iconDisplay.textContent = "☀️"; // Sun shows in Dark Mode to invite Light Mode
+        iconDisplay.textContent = "☀️"; 
       } else {
-        iconDisplay.textContent = "🌙"; // Moon shows in Light Mode to invite Dark Mode
+        iconDisplay.textContent = "🌙"; 
       }
     }
 
-    // Dynamic Circular Ripple Spreading Transition ("Virus Spread")
     function triggerVirusThemeAnimation(event) {
       const canvas = document.getElementById("theme-ripple-canvas");
       const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
       const targetTheme = currentTheme === "dark" ? "light" : "dark";
       
-      // Obtain exactly center coordinates where clicked on the page layout screen 
       const clickX = event.clientX;
       const clickY = event.clientY;
       
-      // Inject CSS absolute position parameters safely 
       canvas.style.setProperty('--ripple-x', `${clickX}px`);
       canvas.style.setProperty('--ripple-y', `${clickY}px`);
       
-      // Color target match assignment rule configurations
       const rippleColor = targetTheme === "light" ? "#cbd5e1" : "#0f111a";
       canvas.style.backgroundColor = rippleColor;
       
-      // Kickstart spreading engine execution loops
       canvas.classList.remove("ripple-active");
-      void canvas.offsetWidth; // Force hardware browser layout recalculation
+      void canvas.offsetWidth; 
       canvas.classList.add("ripple-active");
 
-      // Mid-animation smooth state switch
       setTimeout(() => {
         document.documentElement.setAttribute("data-theme", targetTheme);
         localStorage.setItem("trackerTheme", targetTheme);
         updateThemeIcon(targetTheme);
       }, 350);
 
-      // Reset layer on animation finish
       setTimeout(() => {
         canvas.classList.remove("ripple-active");
         canvas.style.backgroundColor = "transparent";
@@ -1024,10 +1014,11 @@
         currentTrackerUser = "Unassigned_User";
       }
 
+      // REMOVED payload.trackerUser from data row allocation since tab handles it dynamically
       let payload = {
         prefix: prefix,
         elapsedTime: durationString,
-        trackerUser: currentTrackerUser 
+        targetTabName: currentTrackerUser 
       };
 
       if (prefix === 'class') {
@@ -1076,7 +1067,7 @@
       .then(response => response.json())
       .then(data => {
         if (data.result === "success") {
-          console.log("🎉 Data saved successfully inside user sheet tab!");
+          console.log("🎉 Data targeting completed successfully!");
         } else {
           console.error("❌ Google Sheet Error:", data.error);
         }
@@ -1157,13 +1148,13 @@
         document.getElementById('field-doc-id').value = '';
         document.getElementById('field-fields-count').value = '';
         document.getElementById('field-layouts').selectedIndex = 14; 
-        document.getElementById('field-kicked-back').selectedIndex = 0; // Default back to 'No'
+        document.getElementById('field-kicked-back').selectedIndex = 0; 
         document.getElementById('field-notes').value = '';
       } else if (prefix === 'trans') {
         document.getElementById('trans-doc-id').value = '';
         document.getElementById('trans-fields-count').value = '';
         document.getElementById('trans-layouts').selectedIndex = 14; 
-        document.getElementById('trans-kicked-back').selectedIndex = 0; // Default back to 'No'
+        document.getElementById('trans-kicked-back').selectedIndex = 0; 
         document.getElementById('trans-notes').value = '';
       } else if (prefix === 'super') {
         document.getElementById('super-doc-id').value = '';
