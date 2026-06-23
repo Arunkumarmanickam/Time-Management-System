@@ -1,5 +1,5 @@
 // ★ Update this URL when the client deploys their own Apps Script ★
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/library/d/11PzgdPze9EiGCpwkSm33A9k7N0yzELGNnVCzunkB9-F_FYSUfZiNiDpn/11';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXgstFn0Ei5FygrJoCvea2DO4fNq_SXUdxMIewQOwb3mLo-ZcuOD9OQHU514PmnwLH/exec';
 
 exports.handler = async function (event) {
   try {
