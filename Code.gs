@@ -7,7 +7,8 @@ function doGet() {
 function doPost(e) {
   try {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const data = JSON.parse(e.postData.contents);
+    const raw = e.postData.contents;
+    const data = JSON.parse(raw);
     const tabName = data.targetTabName || 'GeneralLog';
     const sheet = getOrCreateSheet(ss, tabName);
 
