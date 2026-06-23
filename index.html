@@ -1063,7 +1063,7 @@
           body: JSON.stringify(payload),
         });
         const data = await res.json();
-        if (data.result === 'success') console.log('Data saved to sheet. Tab:', data.tabName);
+        if (data.result === 'success') console.log('Data saved. Tab:', data.tabName, '| Apps Script received tab:', data.receivedTab, '| raw start:', data.raw?.slice(0, 100));
         else console.error('Sheet error:', data.error);
       } catch (err) {
         console.error('Submit error:', err);

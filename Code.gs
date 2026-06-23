@@ -18,7 +18,7 @@ function doPost(e) {
     sheet.appendRow(row);
 
     return ContentService
-      .createTextOutput(JSON.stringify({ result: 'success' }))
+      .createTextOutput(JSON.stringify({ result: 'success', receivedTab: tabName, raw: raw }))
       .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
     return ContentService
