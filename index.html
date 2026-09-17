@@ -21,21 +21,20 @@
           Helvetica, Arial, sans-serif;
       }
 
-
       /* Full screen background container */
-.background-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-image: url('img.jpeg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  display: flex;
-  justify-content: center;
-}
+      .background-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-image: url('img.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: flex;
+        justify-content: center;
+      }
 
       /* Position the clock exactly 1/4 (25vh) from the top center */
       .clock-wrapper {
@@ -65,7 +64,7 @@
   <body>
     <div class="background-container">
       <div class="clock-wrapper">
-        <div id="clock" class="time">00:00:00</div>
+        <div id="clock" class="time">00:00</div>
         <div id="date" class="date">Friday, March 22</div>
       </div>
     </div>
@@ -74,19 +73,15 @@
       function updateClock() {
         const now = new Date();
 
-        // Strictly 24-hour format logic
+        // Strictly 24-hour format logic (Hours and Minutes only)
         let hours = now.getHours();
         let minutes = now.getMinutes();
-        let seconds = now.getSeconds();
 
         // Standardize double digits
         hours = hours < 10 ? "0" + hours : hours;
         minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
 
-        document.getElementById(
-          "clock"
-        ).textContent = `${hours}:${minutes}:${seconds}`;
+        document.getElementById("clock").textContent = `${hours}:${minutes}`;
 
         // Format date
         const options = { weekday: "long", month: "long", day: "numeric" };
