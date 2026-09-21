@@ -3,9 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Insurrance Manager</title>
+    <title>My Insurrance Manager - Home</title>
     <style>
-      /* Force the page to cover the full monitor and remove scrollbars */
+      @font-face {
+        font-family: "Segoe UI";
+        font-weight: 200;
+        src: local("Segoe UI Light");
+      }
+      @font-face {
+        font-family: "Segoe UI";
+        font-weight: 300;
+        src: local("Segoe UI Semilight");
+      }
+      @font-face {
+        font-family: "Segoe UI";
+        font-weight: 400;
+        src: local("Segoe UI");
+      }
+      @font-face {
+        font-family: "Segoe UI";
+        font-weight: 600;
+        src: local("Segoe UI Semibold");
+      }
+      @font-face {
+        font-family: "Segoe UI";
+        font-weight: 700;
+        src: local("Segoe UI Bold");
+      }
+
       * {
         margin: 0;
         padding: 0;
@@ -16,18 +41,33 @@
       html {
         width: 100%;
         height: 100%;
-        overflow: hidden;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          Helvetica, Arial, sans-serif;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #eef1f5;
+        color: #222;
       }
 
-      /* Full screen background container */
-      .background-container {
-        position: absolute;
+      /* ---------------- Time page (secret / Ctrl+Alt+I) ---------------- */
+      #clockView {
+        display: none;
+        position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
+        z-index: 50;
+        cursor: pointer;
+      }
+
+      #clockView.active {
+        display: block;
+      }
+
+      .background-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         background-image: url('img.jpg');
         background-size: cover;
         background-position: center;
@@ -36,63 +76,607 @@
         justify-content: center;
       }
 
-      /* Position the clock exactly 1/4 (25vh) from the top center */
       .clock-wrapper {
         position: absolute;
-        top: 25vh;
+        top: 21.5vh;
+        left: 50%;
+        transform: translateX(-50%);
         text-align: center;
         color: #ffffff;
-        text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
         user-select: none;
       }
 
       .time {
-        font-size: 5.5rem;
-        font-weight: 300;
-        letter-spacing: -1px;
+        font-family: "Segoe UI", sans-serif;
+        font-size: 96px;
+        font-weight: 400;
+        font-style: normal;
+        letter-spacing: 0;
         line-height: 1;
+        text-align: center;
+        transform: skewX(-4deg);
       }
 
       .date {
-        font-size: 1.5rem;
+        font-family: "Segoe UI", sans-serif;
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: 0;
+        margin-top: 24px;
+        text-align: center;
+      }
+
+      /* ---------------- Insurrance Manager home page ---------------- */
+      .topbar {
+        background: #0b2e56;
+        color: #fff;
+        font-size: 13px;
+      }
+
+      .topbar .inner {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 8px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .topbar a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .masthead {
+        background: #fff;
+        border-bottom: 3px solid #0072ce;
+      }
+
+      .masthead .inner {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .brand-mark {
+        width: 52px;
+        height: 52px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #0072ce, #0b2e56);
+        color: #fff;
+        font-weight: 700;
+        font-size: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        letter-spacing: 1px;
+      }
+
+      .brand-name {
+        font-size: 26px;
+        font-weight: 700;
+        color: #0b2e56;
+        line-height: 1.1;
+      }
+
+      .brand-sub {
+        font-size: 13px;
+        color: #5a6b7d;
         font-weight: 400;
-        margin-top: 10px;
-        opacity: 0.9;
+      }
+
+      .container {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 24px 20px;
+        display: flex;
+        gap: 24px;
+        align-items: flex-start;
+      }
+
+      .sidebar {
+        width: 318px;
+        flex: 0 0 318px;
+      }
+
+      .card {
+        background: #fff;
+        border: 1px solid #d9e0e8;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(11, 46, 86, 0.08);
+      }
+
+      .card h2 {
+        font-size: 19px;
+        font-weight: 600;
+        color: #0b2e56;
+        margin-bottom: 14px;
+      }
+
+      .field {
+        margin-bottom: 12px;
+      }
+
+      .field label {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 4px;
+        color: #2c3e50;
+      }
+
+      .field input {
+        width: 100%;
+        padding: 9px 10px;
+        border: 1px solid #b9c4d0;
+        border-radius: 4px;
+        font-size: 14px;
+        font-family: inherit;
+      }
+
+      .field input:focus {
+        outline: none;
+        border-color: #0072ce;
+      }
+
+      .btn {
+        display: inline-block;
+        background: #0072ce;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 9px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .btn:hover {
+        background: #0b2e56;
+      }
+
+      .btn-block {
+        width: 100%;
+        text-align: center;
+      }
+
+      .login-links {
+        margin-top: 12px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .login-links a {
+        font-size: 13px;
+        color: #0072ce;
+        text-decoration: none;
+      }
+
+      .login-links a:hover {
+        text-decoration: underline;
+      }
+
+      .intro ul {
+        list-style: none;
+        padding-left: 6px;
+      }
+
+      .intro li {
+        padding: 3px 0;
+        font-size: 14px;
+      }
+
+      .intro li::before {
+        content: "\2022";
+        color: #0072ce;
+        font-weight: 700;
+        margin-right: 8px;
+      }
+
+      .content-area {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      .carousel {
+        position: relative;
+        height: 340px;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(11, 46, 86, 0.08);
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+        padding: 40px;
+        flex-direction: column;
+        justify-content: flex-end;
+        color: #fff;
+      }
+
+      .slide.active {
+        display: flex;
+      }
+
+      .slide.s1 { background: linear-gradient(120deg, #0b2e56, #0072ce); }
+      .slide.s2 { background: linear-gradient(120deg, #123b6b, #1e6bb8); }
+      .slide.s3 { background: linear-gradient(120deg, #0a2f3f, #12808d); }
+      .slide.s4 { background: linear-gradient(120deg, #33194a, #7a4fa0); }
+
+      .slide h2 {
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .slide p {
+        font-size: 15px;
+        max-width: 560px;
+        margin-bottom: 14px;
+        opacity: 0.95;
+      }
+
+      .slide .btn {
+        background: #fff;
+        color: #0b2e56;
+      }
+
+      .slide .btn:hover {
+        background: #eef4fb;
+        color: #0b2e56;
+      }
+
+      .carousel .arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.3);
+        color: #fff;
+        border: none;
+        width: 38px;
+        height: 38px;
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+        border-radius: 50%;
+        z-index: 5;
+      }
+
+      .carousel .arrow:hover {
+        background: rgba(0, 0, 0, 0.55);
+      }
+
+      .carousel .arrow.prev { left: 12px; }
+      .carousel .arrow.next { right: 12px; }
+
+      .dots {
+        position: absolute;
+        bottom: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 5;
+      }
+
+      .dots span {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.45);
+        cursor: pointer;
+      }
+
+      .dots span.active {
+        background: #fff;
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .feature {
+        background: #fff;
+        border: 1px solid #d9e0e8;
+        border-radius: 8px;
+        padding: 22px;
+        box-shadow: 0 1px 3px rgba(11, 46, 86, 0.08);
+      }
+
+      .feature h2 {
+        font-size: 20px;
+        color: #0b2e56;
+        margin-bottom: 4px;
+      }
+
+      .feature h4 {
+        font-size: 14px;
+        color: #0072ce;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .feature p {
+        font-size: 14px;
+        color: #45586b;
+        margin-bottom: 12px;
+      }
+
+      .footer {
+        background: #0b2e56;
+        color: #c9d6e4;
+        text-align: center;
+        font-size: 12px;
+        padding: 18px 20px;
+        margin-top: 8px;
+      }
+
+      .hint {
+        position: fixed;
+        right: 12px;
+        bottom: 12px;
+        font-size: 11px;
+        color: #8fa2b5;
+        background: #fff;
+        border: 1px solid #d9e0e8;
+        border-radius: 4px;
+        padding: 4px 8px;
+        z-index: 10;
+      }
+
+      @media (max-width: 900px) {
+        .container {
+          flex-direction: column;
+        }
+        .sidebar {
+          width: 100%;
+          flex: 1 1 auto;
+        }
+        .features {
+          grid-template-columns: 1fr;
+        }
+        .carousel {
+          height: 300px;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="background-container">
-      <div class="clock-wrapper">
-        <div id="clock" class="time">00:00</div>
-        <div id="date" class="date">Friday, March 22</div>
+    <!-- Insurrance Manager home page (default view) -->
+    <div id="appView">
+      <div class="topbar">
+        <div class="inner">
+          <span>Welcome to the Provider Portal</span>
+          <a href="#">Home</a>
+        </div>
+      </div>
+
+      <header class="masthead">
+        <div class="inner">
+          <div class="brand-mark">IM</div>
+          <div>
+            <div class="brand-name">My Insurrance Manager</div>
+            <div class="brand-sub">Provider Portal Tools &amp; Resources</div>
+          </div>
+        </div>
+      </header>
+
+      <div class="container">
+        <aside class="sidebar">
+          <div class="card">
+            <h2>Log In</h2>
+            <form action="#" onsubmit="return false;">
+              <div class="field">
+                <label for="username">Username</label>
+                <input id="username" type="text" autocomplete="username" />
+              </div>
+              <div class="field">
+                <label for="password">Password</label>
+                <input id="password" type="password" autocomplete="current-password" />
+              </div>
+              <button class="btn btn-block" type="submit">Log In</button>
+            </form>
+            <div class="login-links">
+              <a href="#">Register Now</a>
+              <a href="#">Forgot your password?</a>
+              <a href="#">Forgot your username?</a>
+              <a href="#">Trouble signing in?</a>
+            </div>
+          </div>
+
+          <div class="card intro">
+            <h2>Browser Requirements</h2>
+            <p style="font-size: 13px; margin-bottom: 8px">
+              For predictable, reliable performance, we recommend viewing My
+              Insurrance Manager with a current browser:
+            </p>
+            <ul>
+              <li>Microsoft Edge</li>
+              <li>Mozilla Firefox (current version)</li>
+              <li>Google Chrome (current version)</li>
+              <li>Safari (Mac OS only)</li>
+            </ul>
+          </div>
+        </aside>
+
+        <div class="content-area">
+          <div class="carousel" id="carousel">
+            <button class="arrow prev" id="prev">&#10094;</button>
+            <button class="arrow next" id="next">&#10095;</button>
+
+            <div class="slide s1 active">
+              <h2>Welcome to My Insurrance Manager!</h2>
+              <p>
+                Use this portal to submit claims, review benefits and manage
+                your practice. New to the portal? Create a profile to get
+                started in just a few minutes.
+              </p>
+              <a class="btn" href="#">Register Now</a>
+            </div>
+
+            <div class="slide s2">
+              <h2>Provider News</h2>
+              <p>
+                Stay informed about the latest updates, policy changes and
+                announcements that matter to your practice.
+              </p>
+              <a class="btn" href="#">Check Updates</a>
+            </div>
+
+            <div class="slide s3">
+              <h2>Provider Resources</h2>
+              <p>
+                Explore tools and materials created to help you find the
+                information you need quickly and easily.
+              </p>
+              <a class="btn" href="#">Learn More</a>
+            </div>
+
+            <div class="slide s4">
+              <h2>Provider Training</h2>
+              <p>
+                Join webinars and online sessions focused on our tools and the
+                best ways to use them every day.
+              </p>
+              <a class="btn" href="#">Learn More</a>
+            </div>
+
+            <div class="dots" id="dots"></div>
+          </div>
+
+          <div class="features">
+            <div class="feature">
+              <h2>Is your password strong enough?</h2>
+              <h4>Safeguard protected information</h4>
+              <p>
+                Keep your portal account secure by choosing a strong password
+                and updating it regularly.
+              </p>
+              <a href="#" class="btn">Learn how</a>
+            </div>
+            <div class="feature">
+              <h2>Stay in the know</h2>
+              <h4>See the latest bulletins</h4>
+              <p>
+                Get informed of updates and changes as they happen, so you are
+                always up to date.
+              </p>
+              <a href="#" class="btn">Learn Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        Demonstration page for personal use. Not affiliated with any
+        insurance provider.
+      </div>
+    </div>
+
+    <div class="hint">Ctrl+Alt+K</div>
+
+    <!-- Time page (shown via Ctrl+Alt+I) -->
+    <div id="clockView">
+      <div class="background-container">
+        <div class="clock-wrapper">
+          <div id="clock" class="time">00:00</div>
+          <div id="date" class="date">Friday, March 22</div>
+        </div>
       </div>
     </div>
 
     <script>
+      var clockView = document.getElementById("clockView");
+      var appView = document.getElementById("appView");
+
+      function showApp() {
+        appView.style.display = "block";
+        clockView.classList.remove("active");
+      }
+
+      function showClock() {
+        appView.style.display = "none";
+        clockView.classList.add("active");
+      }
+
+      document.addEventListener("keydown", function (e) {
+        if (e.ctrlKey && e.altKey && (e.key === "k" || e.key === "K")) {
+          e.preventDefault();
+          if (clockView.classList.contains("active")) {
+            showApp();
+          } else {
+            showClock();
+          }
+        }
+      });
+
+      clockView.addEventListener("click", showApp);
+
       function updateClock() {
-        const now = new Date();
-
-        // Strictly 24-hour format logic (Hours and Minutes only)
-        let hours = now.getHours();
-        let minutes = now.getMinutes();
-
-        // Standardize double digits
+        var now = new Date();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
         hours = hours < 10 ? "0" + hours : hours;
         minutes = minutes < 10 ? "0" + minutes : minutes;
+        document.getElementById("clock").textContent = hours + ":" + minutes;
 
-        document.getElementById("clock").textContent = `${hours}:${minutes}`;
-
-        // Format date
-        const options = { weekday: "long", month: "long", day: "numeric" };
-        document.getElementById("date").textContent = now.toLocaleDateString(
-          "en-US",
-          options
-        );
+        var opts = { weekday: "long", month: "long", day: "numeric" };
+        document.getElementById("date").textContent =
+          now.toLocaleDateString("en-US", opts);
       }
 
       updateClock();
       setInterval(updateClock, 1000);
+
+      var slides = document.querySelectorAll(".slide");
+      var dotWrap = document.getElementById("dots");
+      var current = 0;
+
+      slides.forEach(function (_, i) {
+        var d = document.createElement("span");
+        d.addEventListener("click", function () {
+          goTo(i);
+        });
+        dotWrap.appendChild(d);
+      });
+
+      var dots = dotWrap.querySelectorAll("span");
+      dots[current].classList.add("active");
+
+      function goTo(i) {
+        slides[current].classList.remove("active");
+        dots[current].classList.remove("active");
+        current = (i + slides.length) % slides.length;
+        slides[current].classList.add("active");
+        dots[current].classList.add("active");
+      }
+
+      document.getElementById("prev").addEventListener("click", function () {
+        goTo(current - 1);
+      });
+
+      document.getElementById("next").addEventListener("click", function () {
+        goTo(current + 1);
+      });
+
+      setInterval(function () {
+        goTo(current + 1);
+      }, 6000);
     </script>
   </body>
 </html>
